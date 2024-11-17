@@ -12,7 +12,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # Setup ScrollArea
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         
         # Load cameras from file
         self.load_cameras()
@@ -52,7 +52,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 camera = QLabel()
                 camera.setObjectName(f"camera_{i+1}")
                 camera.setStyleSheet("QLabel { border: 1px solid grey; background-color: #f0f0f0; }")
-                camera.setFixedSize(251, 141)
+                camera.setFixedSize(300, 181)
                 
                 # Tạo nút Start
                 btn = QPushButton("Start")
@@ -79,7 +79,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     background-color: #f0f0f0;
                 }
             """)
-            add_camera_btn.setFixedSize(251, 141)
+            add_camera_btn.setFixedSize(300, 181)
             add_camera_btn.setCursor(Qt.PointingHandCursor)
             add_camera_btn.clicked.connect(self.open_camera_settings)
             
