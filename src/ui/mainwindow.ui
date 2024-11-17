@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #393c3f; color: white</string>
+   <string notr="true">background-color: #2e2e2e; color: white;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="frame_2">
@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border: None</string>
+     <string notr="true">border: 2px solid #444444; border-radius: 10px; background-color: #3a3a3a;</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -40,12 +40,15 @@
       <rect>
        <x>10</x>
        <y>170</y>
-       <width>51</width>
-       <height>20</height>
+       <width>150</width>
+       <height>30</height>
       </rect>
      </property>
      <property name="text">
-      <string>Area 1</string>
+      <string>Present</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 18px; font-weight: bold; color: #ffcc00;</string>
      </property>
     </widget>
     <widget class="QLabel" name="camera_1">
@@ -58,10 +61,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel { border: 1px solid grey; background-color: #f0f0f0; }</string>
-     </property>
-     <property name="text">
-      <string/>
+      <string notr="true">QLabel { border: 2px solid #555555; background-color: #222222; border-radius: 5px; }</string>
      </property>
     </widget>
     <widget class="QPushButton" name="btn_Start_1">
@@ -74,7 +74,7 @@
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: red; border: 1; border-radius: 5</string>
+      <string notr="true">background-color: #e74c3c; border: 1px solid #d43f3a; border-radius: 5px; color: white; font-weight: bold;</string>
      </property>
      <property name="text">
       <string>Start</string>
@@ -114,63 +114,26 @@
     <zorder>camera_1</zorder>
     <zorder>btn_Start_1</zorder>
    </widget>
-   <widget class="Line" name="line">
+
+   <!-- Vertical line separator -->
+   <widget class="QFrame" name="line">
     <property name="geometry">
      <rect>
       <x>240</x>
       <y>100</y>
-      <width>21</width>
+      <width>3</width>
       <height>780</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">padding: 3</string>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="QLCDNumber" name="time_clock">
-    <property name="geometry">
-     <rect>
-      <x>1070</x>
-      <y>30</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>was@peenang</family>
-      <pointsize>10</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="mouseTracking">
-     <bool>false</bool>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: white;</string>
+     <string notr="true">background-color: #444444;</string>
     </property>
     <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <property name="smallDecimalPoint">
-     <bool>true</bool>
-    </property>
-    <property name="digitCount">
-     <number>8</number>
+     <enum>QFrame::VLine</enum>
     </property>
    </widget>
+
+   <!-- All Cameras Information Section -->
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -184,7 +147,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="styleSheet">
-        <string notr="true">padding-left: 10</string>
+        <string notr="true">padding-left: 10px; font-size: 16px; color: #ffcc00;</string>
        </property>
        <property name="text">
         <string>All Cameras</string>
@@ -193,24 +156,21 @@
      </item>
      <item>
       <widget class="QLabel" name="all_cameras_label">
-       <property name="font">
-        <font>
-         <stylestrategy>NoAntialias</stylestrategy>
-        </font>
-       </property>
        <property name="styleSheet">
-        <string notr="true">padding-right: 10; width: &quot;40%&quot;</string>
+        <string notr="true">padding-right: 10px; font-size: 16px; color: #ffffff;</string>
        </property>
        <property name="text">
         <string>8</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
+
+   <!-- Camera Active Section -->
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
@@ -224,7 +184,7 @@
      <item>
       <widget class="QLabel" name="label_5">
        <property name="styleSheet">
-        <string notr="true">padding-left: 10</string>
+        <string notr="true">padding-left: 10px; font-size: 16px; color: #ffcc00;</string>
        </property>
        <property name="text">
         <string>Camera is active</string>
@@ -234,18 +194,20 @@
      <item>
       <widget class="QLabel" name="camera_active_label">
        <property name="styleSheet">
-        <string notr="true">padding-right: 10</string>
+        <string notr="true">padding-right: 10px; font-size: 16px; color: #ffffff;</string>
        </property>
        <property name="text">
         <string>6</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
+
+   <!-- Camera Stopped Section -->
    <widget class="QWidget" name="horizontalLayoutWidget_3">
     <property name="geometry">
      <rect>
@@ -259,7 +221,7 @@
      <item>
       <widget class="QLabel" name="label_7">
        <property name="styleSheet">
-        <string notr="true">padding-left: 10</string>
+        <string notr="true">padding-left: 10px; font-size: 16px; color: #ffcc00;</string>
        </property>
        <property name="text">
         <string>Camera is stopped</string>
@@ -269,36 +231,17 @@
      <item>
       <widget class="QLabel" name="camera_stop_label">
        <property name="styleSheet">
-        <string notr="true">padding-right: 10</string>
+        <string notr="true">padding-right: 10px; font-size: 16px; color: #ffffff;</string>
        </property>
        <property name="text">
         <string>5</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QPushButton" name="menuwindow_Btn">
-    <property name="geometry">
-     <rect>
-      <x>940</x>
-      <y>20</y>
-      <width>81</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click here to open menu window&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-radius: 10; background-color: rgb(66, 85, 72);text-align: center</string>
-    </property>
-    <property name="text">
-     <string>Menu </string>
-    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
