@@ -153,7 +153,7 @@ class LoadUI(QMainWindow):
         cvt2QtFormat = QImage(rgb_img.data, w, h, bytes_per_line, QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(cvt2QtFormat)
 
-        return pixmap  # QPixmap.fromImage(cvt2QtFormat)
+        return pixmap  # QPixmap.fromImage(cvt2QtFormat)11
 
     def StartWebCam(self, pin):
         try:
