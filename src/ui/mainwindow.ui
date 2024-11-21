@@ -64,7 +64,7 @@
       <string notr="true">QLabel { border: 2px solid #555555; background-color: #222222; border-radius: 5px; }</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_Start_1">
+    <widget class="QPushButton" name="btn_Start">
      <property name="geometry">
       <rect>
        <x>610</x>
@@ -110,9 +110,9 @@
      </widget>
     </widget>
     <zorder>scrollArea</zorder>
-    <zorder>camera_name_1</zorder>
-    <zorder>camera_1</zorder>
-    <zorder>btn_Start_1</zorder>
+    <zorder>camera_name</zorder>
+    <zorder>camera</zorder>
+    <zorder>btn_Start</zorder>
    </widget>
 
    <!-- Vertical line separator -->
