@@ -35,7 +35,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="camera_name_1">
+    <widget class="QLabel" name="main_camera_name">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -44,14 +44,14 @@
        <height>30</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Present</string>
-     </property>
      <property name="styleSheet">
       <string notr="true">font-size: 18px; font-weight: bold; color: #ffcc00;</string>
      </property>
+     <property name="text">
+      <string>Present</string>
+     </property>
     </widget>
-    <widget class="QLabel" name="camera_1">
+    <widget class="QLabel" name="main_camera">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -64,7 +64,7 @@
       <string notr="true">QLabel { border: 2px solid #555555; background-color: #222222; border-radius: 5px; }</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_Start">
+    <widget class="QPushButton" name="btn_Start_Main_Camera">
      <property name="geometry">
       <rect>
        <x>610</x>
@@ -109,13 +109,11 @@
       </property>
      </widget>
     </widget>
+    <zorder>main_camera_name</zorder>
+    <zorder>main_camera</zorder>
     <zorder>scrollArea</zorder>
-    <zorder>camera_name</zorder>
-    <zorder>camera</zorder>
-    <zorder>btn_Start</zorder>
+    <zorder>btn_Start_Main_Camera</zorder>
    </widget>
-
-   <!-- Vertical line separator -->
    <widget class="QFrame" name="line">
     <property name="geometry">
      <rect>
@@ -132,8 +130,6 @@
      <enum>QFrame::VLine</enum>
     </property>
    </widget>
-
-   <!-- All Cameras Information Section -->
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -163,14 +159,12 @@
         <string>8</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-
-   <!-- Camera Active Section -->
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
@@ -200,14 +194,12 @@
         <string>6</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-
-   <!-- Camera Stopped Section -->
    <widget class="QWidget" name="horizontalLayoutWidget_3">
     <property name="geometry">
      <rect>
@@ -237,7 +229,7 @@
         <string>5</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignVCenter</set>
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>

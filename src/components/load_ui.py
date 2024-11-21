@@ -20,8 +20,8 @@ class LoadUI(QMainWindow):
 
         # Load cameras from file
         self.load_cameras()
-        self.btn_Start.clicked.connect(self.StartWebCam)
-        self.btn_Start.setStyleSheet("background-color: red; color: white;")
+        self.btn_Start_Main_Camera.clicked.connect(self.StartWebCam)
+        self.btn_Start_Main_Camera.setStyleSheet("background-color: red; color: white;")
         # self.btn_stop.clicked.connect(self.StopWebcam)
     def load_cameras(self):
         try:
