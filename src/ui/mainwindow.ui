@@ -64,22 +64,6 @@
       <string notr="true">QLabel { border: 2px solid #555555; background-color: #222222; border-radius: 5px; }</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_Start_Main_Camera">
-     <property name="geometry">
-      <rect>
-       <x>610</x>
-       <y>220</y>
-       <width>91</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: #e74c3c; border: 1px solid #d43f3a; border-radius: 5px; color: white; font-weight: bold;</string>
-     </property>
-     <property name="text">
-      <string>Start</string>
-     </property>
-    </widget>
     <widget class="QScrollArea" name="scrollArea">
      <property name="geometry">
       <rect>
