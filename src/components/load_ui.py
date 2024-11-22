@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QMainWindow
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QMainWindow, QMessageBox
 from PyQt5.QtCore import Qt
 from src.preprocessing.camera_handle import CameraHandler
 
@@ -39,23 +39,65 @@ class LoadUI(QMainWindow):
             num_columns = 3
             # Tạo camera widgets
             for i, url in enumerate(self.camera_handler.camera_urls):
-                # Tạo camera label
+                # Tạo widget container cho mỗi camera
+                container = QWidget()
+                container_layout = QGridLayout()
+                container.setLayout(container_layout)
+                container_layout.setContentsMargins(0, 0, 0, 0)  # Loại bỏ margin
+
+                # Camera container với position relative
+                camera_container = QWidget()
+                camera_container.setStyleSheet("QWidget { position: relative; }")
+                camera_container_layout = QGridLayout()
+                camera_container.setLayout(camera_container_layout)
+                camera_container_layout.setContentsMargins(0, 0, 0, 0)
+
+                # Camera label
                 camera = QLabel()
                 camera.setObjectName(f"camera_{i + 1}")
                 camera.setStyleSheet("QLabel { border: 1px solid grey; background-color: #f0f0f0; }")
                 camera.setFixedSize(300, 181)
+                camera_container_layout.addWidget(camera, 0, 0)
 
-                # Tạo nút Start
+                # Close button (dấu x)
+                close_btn = QPushButton("×")
+                close_btn.setObjectName(f"btn_Close_{i + 1}")
+                close_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: rgba(255, 255, 255, 0.8);
+                        border: none;
+                        border-radius: 10px;
+                        color: #666;
+                        font-size: 16px;
+                        font-weight: bold;
+                        width: 20px;
+                        height: 20px;
+                    }
+                    QPushButton:hover {
+                        background-color: #ff4444;
+                        color: white;
+                    }
+                """)
+                close_btn.setFixedSize(20, 20)
+                close_btn.setCursor(Qt.PointingHandCursor)
+                close_btn.clicked.connect(lambda _, url=url: self.delete_camera(url))
+                
+                # Thêm close button vào góc trên phải
+                camera_container_layout.addWidget(close_btn, 0, 0, Qt.AlignTop | Qt.AlignRight)
+                container_layout.addWidget(camera_container, 0, 0)
+
+                # Start button
                 btn = QPushButton("Start")
                 btn.setObjectName(f"btn_Start_{i + 1}")
                 btn.setStyleSheet("background-color: red; border: 1; border-radius: 5")
                 btn.setFixedSize(91, 41)
                 btn.clicked.connect(lambda _, idx=i: self.camera_handler.toggle_camera_stream(idx))
-                # Thêm vào layout
+                container_layout.addWidget(btn, 1, 0, Qt.AlignCenter)
+
+                # Thêm container vào layout chính
                 row = i // num_columns
                 col = i % num_columns
-                layout.addWidget(camera, row * 2, col)
-                layout.addWidget(btn, row * 2 + 1, col, Qt.AlignCenter)
+                layout.addWidget(container, row * 2, col)
 
             # Thêm nút Add New Camera
             add_camera_btn = QPushButton()
@@ -110,6 +152,8 @@ class LoadUI(QMainWindow):
                 with open('./data/camera.txt', 'a') as f:
                     f.write(f'\n{new_camera_url}')
 
+                # Cập nhật lại danh sách camera để load lại ui
+                self.camera_handler.camera_urls = self.load_camera_urls()
                 # Cập nhật lại giao diện
                 self.clear_layout()
                 self.load_cameras()
@@ -137,3 +181,36 @@ class LoadUI(QMainWindow):
     def find_camera_view(self, camera_index):
         """Tìm view camera cho camera dựa trên chỉ số."""
         return self.findChild(QLabel, f"camera_{camera_index + 1}")
+
+    def delete_camera(self, url):
+        try:
+            # Hiển thị hộp thoại xác nhận
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Question)
+            msg.setText("DO YOU WANT TO DELETE THIS CAMERA?")
+            msg.setWindowTitle("CONFIRM DELETE")
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            msg.setDefaultButton(QMessageBox.No)
+            
+            # Nếu người dùng chọn Yes
+            if msg.exec_() == QMessageBox.Yes:
+                # Đọc tất cả các camera urls
+                with open('./data/camera.txt', 'r') as f:
+                    urls = f.readlines()
+                
+                # Xóa camera khỏi danh sách
+                urls = [u for u in urls if u.strip() != url.strip()]
+                
+                # Ghi lại file
+                with open('./data/camera.txt', 'w') as f:
+                    f.writelines(urls)
+                
+                # Cập nhật lại danh sách camera_urls trong camera_handler
+                self.camera_handler.camera_urls = self.load_camera_urls()
+                
+                # Cập nhật lại giao diện
+                self.clear_layout()
+                self.load_cameras()
+                
+        except Exception as e:
+            print(f"Lỗi khi xóa camera: {str(e)}")
