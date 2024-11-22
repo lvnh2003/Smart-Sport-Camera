@@ -10,5 +10,3 @@ box_colors = {
 }
 
 labels = ["T-L", "T-R", "GK-L", "GK-R", "Ball", "Main Ref", "Side Ref", "Staff"]
-
-ui_links = "./src/ui/"
