@@ -11,7 +11,7 @@ class LoadUI(QMainWindow):
         self.model = model
         uic.loadUi('./src/ui/mainwindow.ui', self)
         self.camera_handler = CameraHandler(self.model, self.load_camera_urls(), self.camera_active_label,
-                                            self.camera_stop_label, self.find_start_button, self.find_camera_view)
+                                            self.camera_stop_label, self.find_start_button, self.find_camera_view, self.main_camera)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.load_cameras()

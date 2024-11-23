@@ -3,7 +3,6 @@ from src.components.load_ui import LoadUI
 from ultralytics import YOLO
 if __name__ == "__main__":
     model = YOLO("./src/models/best.pt")
-    video_path = "./data/test.mp4"
     app = QApplication([])
     mainwindow = LoadUI(model)
     mainwindow.show()

@@ -5,7 +5,7 @@ from src.components.thread_camera import ThreadCamera
 
 class CameraHandler:
 
-    def __init__(self, model, camera_urls, camera_active_label, camera_stop_label, find_start_button, find_camera_view):
+    def __init__(self, model, camera_urls, camera_active_label, camera_stop_label, find_start_button, find_camera_view, main_camera):
         self.model = model
         self.camera_urls = camera_urls
         self.camera_active_label = camera_active_label
@@ -13,6 +13,7 @@ class CameraHandler:
         self.find_start_button = find_start_button
         self.find_camera_view = find_camera_view
         self.active_camera_threads = [None] * len(camera_urls)
+        self.main_camera = main_camera
 
     def opencv_emit(self, image, camera_index):
         """Phát hình ảnh từ camera và hiển thị trên UI."""
@@ -41,6 +42,7 @@ class CameraHandler:
             self.camera_stop_label.setText(str(int(self.camera_stop_label.text()) - 1))
             self.active_camera_threads[camera_index] = ThreadCamera(self.model, self.camera_urls[camera_index])
             self.active_camera_threads[camera_index].ImageUpdate.connect(lambda image, x=camera_index: self.opencv_emit(image, x))
+            self.active_camera_threads[camera_index].ImageDisplayMain.connect(lambda image, x=camera_index: self.opencv_emit_main_camera(image))
             self.active_camera_threads[camera_index].start()
         else:
             self.active_camera_threads[camera_index].stop()
@@ -48,3 +50,10 @@ class CameraHandler:
             self.camera_stop_label.setText(str(int(self.camera_stop_label.text()) + 1))
             self.active_camera_threads[camera_index] = None
             btn.setText("Start")
+
+    def opencv_emit_main_camera(self,image):
+        """Phát hình ảnh từ camera chính và hiển thị trên UI."""
+        original = self.cvt_cv_qt(image)
+        self.main_camera.setPixmap(original)
+        self.main_camera.setScaledContents(True)
+
