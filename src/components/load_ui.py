@@ -198,6 +198,8 @@ class LoadUI(QMainWindow):
                 with open('./data/camera.txt', 'r') as f:
                     urls = f.readlines()
                 
+                # Tìm vị trí của camera cần xóa trong danh sách camera_urls
+                camera_index = self.camera_handler.camera_urls.index(url)
                 # Xóa camera khỏi danh sách
                 urls = [u for u in urls if u.strip() != url.strip()]
                 
