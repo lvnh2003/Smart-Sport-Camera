@@ -148,13 +148,19 @@ class LoadUI(QMainWindow):
         new_camera_url = self.camera_settings.ipAddress.toPlainText().strip()
         if new_camera_url:
             try:
-                # Thêm camera mới vào file
-                with open('./data/camera.txt', 'a') as f:
-                    f.write(f'\n{new_camera_url}')
+                # Đọc tất cả các URL hiện tại
+                with open('./data/camera.txt', 'r') as f:
+                    urls = [line.strip() for line in f.readlines() if line.strip()]  # Bỏ qua dòng trống
+                
+                # Thêm URL mới
+                urls.append(new_camera_url)
+                
+                # Ghi lại file
+                with open('./data/camera.txt', 'w') as f:
+                    f.write('\n'.join(urls))
 
-                # Cập nhật lại danh sách camera để load lại ui
+                # Cập nhật lại danh sách camera
                 self.camera_handler.camera_urls = self.load_camera_urls()
-                # Cập nhật lại giao diện
                 self.clear_layout()
                 self.load_cameras()
 
@@ -184,7 +190,6 @@ class LoadUI(QMainWindow):
 
     def delete_camera(self, url):
         try:
-            # Hiển thị hộp thoại xác nhận
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Question)
             msg.setText("DO YOU WANT TO DELETE THIS CAMERA?")
@@ -192,27 +197,29 @@ class LoadUI(QMainWindow):
             msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             msg.setDefaultButton(QMessageBox.No)
             
-            # Nếu người dùng chọn Yes
             if msg.exec_() == QMessageBox.Yes:
-                # Đọc tất cả các camera urls
-                with open('./data/camera.txt', 'r') as f:
-                    urls = f.readlines()
-                
-                # Tìm vị trí của camera cần xóa trong danh sách camera_urls
-                camera_index = self.camera_handler.camera_urls.index(url)
-                # Xóa camera khỏi danh sách
-                urls = [u for u in urls if u.strip() != url.strip()]
-                
-                # Ghi lại file
-                with open('./data/camera.txt', 'w') as f:
-                    f.writelines(urls)
-                
-                # Cập nhật lại danh sách camera_urls trong camera_handler
-                self.camera_handler.camera_urls = self.load_camera_urls()
-                
-                # Cập nhật lại giao diện
-                self.clear_layout()
-                self.load_cameras()
-                
+                # Tìm button được click
+                sender = self.sender()
+                if sender:
+                    # Lấy index từ tên của button close
+                    button_name = sender.objectName()
+                    camera_index = int(button_name.split('_')[-1]) - 1
+                    
+                    # Đọc nội dung file và loại bỏ dòng trống
+                    with open('./data/camera.txt', 'r') as f:
+                        urls = [line.strip() for line in f.readlines() if line.strip()]
+                    
+                    # Xóa URL tại vị trí camera cần xóa
+                    urls.pop(camera_index)
+                    
+                    # Ghi lại file
+                    with open('./data/camera.txt', 'w') as f:
+                        f.write('\n'.join(urls))
+                    
+                    # Cập nhật lại danh sách camera
+                    self.camera_handler.camera_urls = self.load_camera_urls()
+                    self.clear_layout()
+                    self.load_cameras()
+                    
         except Exception as e:
-            print(f"Lỗi khi xóa camera: {str(e)}")
+            print(f"Error deleting camera: {str(e)}")
