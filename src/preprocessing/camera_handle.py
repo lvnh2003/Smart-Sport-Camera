@@ -5,11 +5,9 @@ from src.components.thread_camera import ThreadCamera
 
 class CameraHandler:
 
-    def __init__(self, model, camera_urls, camera_active_label, camera_stop_label, find_start_button, find_camera_view, main_camera):
+    def __init__(self, model, camera_urls, find_start_button, find_camera_view, main_camera):
         self.model = model
         self.camera_urls = camera_urls
-        self.camera_active_label = camera_active_label
-        self.camera_stop_label = camera_stop_label
         self.find_start_button = find_start_button
         self.find_camera_view = find_camera_view
         self.active_camera_threads = [None] * len(camera_urls)
@@ -42,16 +40,12 @@ class CameraHandler:
         btn = self.find_start_button(camera_index)
         if self.active_camera_threads[camera_index] is None:
             btn.setText("Stop")
-            self.camera_active_label.setText(str(int(self.camera_active_label.text()) + 1))
-            self.camera_stop_label.setText(str(int(self.camera_stop_label.text()) - 1))
             self.active_camera_threads[camera_index] = ThreadCamera(self.model, self.camera_urls[camera_index])
             self.active_camera_threads[camera_index].ImageUpdate.connect(lambda image, x=camera_index: self.opencv_emit(image, x))
             self.active_camera_threads[camera_index].ImageDisplayMain.connect(lambda image, x=camera_index: self.opencv_emit_main_camera(image))
             self.active_camera_threads[camera_index].start()
         else:
             self.active_camera_threads[camera_index].stop()
-            self.camera_active_label.setText(str(int(self.camera_active_label.text()) - 1))
-            self.camera_stop_label.setText(str(int(self.camera_stop_label.text()) + 1))
             self.active_camera_threads[camera_index] = None
             btn.setText("Start")
 

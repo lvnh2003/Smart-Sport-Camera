@@ -10,8 +10,7 @@ class LoadUI(QMainWindow):
         super().__init__()
         self.model = model
         uic.loadUi('./src/ui/mainwindow.ui', self)
-        self.camera_handler = CameraHandler(self.model, self.load_camera_urls(), self.camera_active_label,
-                                            self.camera_stop_label, self.find_start_button, self.find_camera_view, self.main_camera)
+        self.camera_handler = CameraHandler(self.model, self.load_camera_urls(),self.find_start_button, self.find_camera_view, self.main_camera)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.load_cameras()
@@ -80,7 +79,7 @@ class LoadUI(QMainWindow):
                 """)
                 close_btn.setFixedSize(20, 20)
                 close_btn.setCursor(Qt.PointingHandCursor)
-                close_btn.clicked.connect(lambda _, url=url: self.delete_camera(url))
+                close_btn.clicked.connect(lambda _, url_camera=url: self.delete_camera(url_camera))
                 
                 # Thêm close button vào góc trên phải
                 camera_container_layout.addWidget(close_btn, 0, 0, Qt.AlignTop | Qt.AlignRight)
