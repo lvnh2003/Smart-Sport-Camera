@@ -35,6 +35,10 @@ class CameraHandler:
 
     def toggle_camera_stream(self, camera_index):
         """Bật/tắt camera stream dựa trên trạng thái hiện tại."""
+        # Sửa lỗi khi add thêm camera mới bị sai index
+        if camera_index >= len(self.active_camera_threads):
+            self.active_camera_threads.extend([None] * (camera_index - len(self.active_camera_threads) + 1))
+        
         btn = self.find_start_button(camera_index)
         if self.active_camera_threads[camera_index] is None:
             btn.setText("Stop")
