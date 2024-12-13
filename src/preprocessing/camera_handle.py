@@ -1,6 +1,5 @@
 from PyQt5.QtGui import QImage, QPixmap
 import cv2
-from PyQt5.QtWidgets import QPushButton, QLabel
 from src.components.thread_camera import ThreadCamera
 
 class CameraHandler:
@@ -12,6 +11,7 @@ class CameraHandler:
         self.find_camera_view = find_camera_view
         self.active_camera_threads = [None] * len(camera_urls)
         self.main_camera = main_camera
+        self.array_cameras = self.init_array_cameras_object()
 
     def opencv_emit(self, image, camera_index):
         """Phát hình ảnh từ camera và hiển thị trên UI."""
@@ -36,11 +36,11 @@ class CameraHandler:
         # Sửa lỗi khi add thêm camera mới bị sai index
         if camera_index >= len(self.active_camera_threads):
             self.active_camera_threads.extend([None] * (camera_index - len(self.active_camera_threads) + 1))
-        
+
         btn = self.find_start_button(camera_index)
         if self.active_camera_threads[camera_index] is None:
             btn.setText("Stop")
-            self.active_camera_threads[camera_index] = ThreadCamera(self.model, self.camera_urls[camera_index])
+            self.active_camera_threads[camera_index] = ThreadCamera(self.model, self.camera_urls[camera_index], camera_index, self.update_point_attractive)
             self.active_camera_threads[camera_index].ImageUpdate.connect(lambda image, x=camera_index: self.opencv_emit(image, x))
             self.active_camera_threads[camera_index].ImageDisplayMain.connect(lambda image, x=camera_index: self.opencv_emit_main_camera(image))
             self.active_camera_threads[camera_index].start()
@@ -49,9 +49,19 @@ class CameraHandler:
             self.active_camera_threads[camera_index] = None
             btn.setText("Start")
 
-    def opencv_emit_main_camera(self,image):
+    def opencv_emit_main_camera(self, image):
         """Phát hình ảnh từ camera chính và hiển thị trên UI."""
         original = self.cvt_cv_qt(image)
         self.main_camera.setPixmap(original)
         self.main_camera.setScaledContents(True)
 
+    def init_array_cameras_object(self):
+        array_of_objects = {i: 0 for i in range(len(self.camera_urls))}
+        return array_of_objects
+
+    def update_point_attractive(self, index, value):
+        if index in self.array_cameras:
+            self.array_cameras[index] = value
+            return self.array_cameras
+        else:
+            print("Index out of range!")

@@ -1,34 +1,36 @@
 from PyQt5.QtCore import pyqtSignal, QThread
-import numpy as np,cv2
+import numpy as np, cv2
 
-from src.preprocessing.classify import  get_players_boxes, get_player_classifier, get_left_team_label, \
+from src.preprocessing.classify import get_players_boxes, get_player_classifier, get_left_team_label, \
     get_grass_color, classify_players, get_player_colors
 from src.utils.config import box_colors, labels
 
 
 class ThreadCamera(QThread):
     ImageUpdate = pyqtSignal(np.ndarray)
-    ImageDisplayMain  = pyqtSignal(np.ndarray)
-    def __init__(self,model,camera):
+    ImageDisplayMain = pyqtSignal(np.ndarray)
+    def __init__(self, model, camera, index, change_state):
         super().__init__()
         self.model = model
         self.camera = camera
+        self.index = index
+        self.change_state = change_state
 
     # run camera
     def run(self):
-        Capture = cv2.VideoCapture("./data/"+self.camera)
-        Capture.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
-        Capture.set(cv2.CAP_PROP_FRAME_WIDTH,640)
+        Capture = cv2.VideoCapture("./data/" + self.camera)
+        Capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        Capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 
         self.ThreadActive = True
         players_clf = None
         left_team_label = 0
         grass_hsv = None
         while self.ThreadActive:
-            ret,frame_cap = Capture.read()
+            ret, frame_cap = Capture.read()
             current_frame_idx = Capture.get(cv2.CAP_PROP_POS_FRAMES)
             if ret:
-                result =  self.model(frame_cap, conf=0.5,verbose = False)[0]
+                result = self.model(frame_cap, conf=0.5, verbose=False)[0]
                 players_imgs, players_boxes = get_players_boxes(result)
                 players_colors = get_player_colors(players_imgs, grass_hsv, frame_cap)
                 # chạy 1 frame đầu tiên thôi
@@ -84,30 +86,31 @@ class ThreadCamera(QThread):
                     cv2.putText(frame_cap, labels[label], (x1 - 30, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                                 box_colors[str(label)], 2)
                 # Nếu đạt các điều kiện thì hiện thị trên camera chính
-                is_noticeable = False
-
+                point = 0
                 # Thủ môn và bóng xuất hiện gần nhau
                 if counts["ball"] > 0 and (counts["gk_left"] > 0 or counts["gk_right"] > 0):
-                    is_noticeable = True
+                    point += 4
 
                 # Cầu thủ và trọng tài gần nhau!
                 if counts["main_ref"] > 0 and positions["ref"] is not None:
                     for player_pos in positions["players"]:
                         if np.linalg.norm(np.array(positions["ref"]) - np.array(player_pos)) < 50:
-                            is_noticeable = True
+                            point += 3
 
                 # Tình huống tranh chấp xảy ra
                 if counts["team_left"] + counts["team_right"] > 3 and counts["ball"] == 0:
-                    is_noticeable = True
+                    point += 2
 
                 # Có cầu thủ và bóng trên sân!
                 if counts["team_left"] + counts["team_right"] >= 2 and counts["ball"] > 0:
-                    is_noticeable = True
+                    point += 1
 
-                if(is_noticeable):
+                # kiểm tra có phải là thread camera  hiện tại có phải có point cao nhất không
+                array_cameras = self.change_state(self.index, point)
+                is_max_point = max(array_cameras, key=array_cameras.get) == self.index
+                if is_max_point:
                     self.ImageDisplayMain.emit(frame_cap)
                 self.ImageUpdate.emit(frame_cap)
-
 
     def stop(self):
         self.ThreadActive = False
