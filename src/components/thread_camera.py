@@ -26,19 +26,24 @@ class ThreadCamera(QThread):
         players_clf = None
         left_team_label = 0
         grass_hsv = None
+        eligible = False
         while self.ThreadActive:
             ret, frame_cap = Capture.read()
-            current_frame_idx = Capture.get(cv2.CAP_PROP_POS_FRAMES)
+
             if ret:
                 result = self.model(frame_cap, conf=0.5, verbose=False)[0]
                 players_imgs, players_boxes = get_players_boxes(result)
                 players_colors = get_player_colors(players_imgs, grass_hsv, frame_cap)
-                # chạy 1 frame đầu tiên thôi
-                if current_frame_idx == 1:
-                    players_clf = get_player_classifier(players_colors)
-                    left_team_label = get_left_team_label(players_boxes, players_colors, players_clf)
-                    grass_color = get_grass_color(result.orig_img)
-                    grass_hsv = cv2.cvtColor(np.uint8([[list(grass_color)]]), cv2.COLOR_BGR2HSV)
+                # kiểm tra frame đó có đủ điều kiện không ( classify các cầu thủ )
+                if not eligible:
+                    if players_boxes and len(players_colors)>=2 :
+                        players_clf = get_player_classifier(players_colors)
+                        left_team_label = get_left_team_label(players_boxes, players_colors, players_clf)
+                        grass_color = get_grass_color(result.orig_img)
+                        grass_hsv = cv2.cvtColor(np.uint8([[list(grass_color)]]), cv2.COLOR_BGR2HSV)
+                        eligible = True
+                    continue
+
                 counts = {
                     "team_left": 0, "team_right": 0,
                     "gk_left": 0, "gk_right": 0,
