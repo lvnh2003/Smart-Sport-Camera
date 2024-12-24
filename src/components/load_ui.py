@@ -2,6 +2,8 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QMainWindow, QMessageBox
 from PyQt5.QtCore import Qt
+
+from src.components.add_camera import AddCamera
 from src.preprocessing.camera_handle import CameraHandler
 
 class LoadUI(QMainWindow):
@@ -133,14 +135,8 @@ class LoadUI(QMainWindow):
             print(f"Lỗi khi đọc file camera: {e}")
 
     def open_camera_settings(self):
-        # Tạo và hiển thị cửa sổ camera settings
-        self.camera_settings = QMainWindow()
-        uic.loadUi('./src/ui/camera_setting.ui', self.camera_settings)
-        # Kết nối nút Close với hàm đóng cửa sổ
-        self.camera_settings.close_btn.clicked.connect(self.camera_settings.close)
-        # Kết nối nút Update với hàm cập nhật camera
-        self.camera_settings.updateBtn.clicked.connect(self.update_camera_list)
-        self.camera_settings.show()
+        AddCamera(self)
+        return
 
     def update_camera_list(self):
         # Lấy IP address từ textEdit

@@ -4,6 +4,7 @@ import numpy as np, cv2
 from src.preprocessing.classify import get_players_boxes, get_player_classifier, get_left_team_label, \
     get_grass_color, classify_players, get_player_colors
 from src.utils.config import box_colors, labels
+from src.components.notify import NotifyMessage
 
 
 class ThreadCamera(QThread):
@@ -120,3 +121,37 @@ class ThreadCamera(QThread):
     def stop(self):
         self.ThreadActive = False
         self.quit()
+
+class ThreadCameraAdd(QThread):
+    ImageUpdate = pyqtSignal(np.ndarray)
+    NotifySignal = pyqtSignal(str)
+
+    def __init__(self, camera):
+        super().__init__()
+        self.ThreadActive = False
+        self.camera = camera
+        self.NotifySignal.connect(self.notify_error)
+
+    def run(self):
+        Capture = cv2.VideoCapture("./data/" + self.camera)
+        if not Capture.isOpened():
+            self.NotifySignal.emit("Invalid Camera IP Address \nPlease check again")
+            print("Error: Camera could not be opened.")
+            self.stop()
+            return
+
+        Capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        Capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.ThreadActive = True
+        while self.ThreadActive:
+            ret, frame_cap = Capture.read()
+            if ret:
+                self.ImageUpdate.emit(frame_cap)
+        Capture.release()
+
+    def stop(self):
+        self.ThreadActive = False
+        self.quit()
+        
+    def notify_error(self, message):
+        NotifyMessage(message, 0)

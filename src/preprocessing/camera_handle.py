@@ -65,3 +65,4 @@ class CameraHandler:
             return self.array_cameras
         else:
             print("Index out of range!")
+            return self.array_cameras
